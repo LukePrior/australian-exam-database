@@ -11,7 +11,7 @@ https://quiz.nesa.nsw.edu.au/home
 <html>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <body>
-  	<input type="button" id="newQuestion" value="Next Q"/>
+  	<input type="button" id="newQuestion" value="Skip"/>
     <input type="button" id="playButton" value="Play/Pause"/>
     <br><br>
     Text Size: <input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><br><br>
@@ -68,7 +68,7 @@ https://quiz.nesa.nsw.edu.au/home
     });
     
     // Next question
-    document.getElementById('newQuestion').onclick = function(){
+    function nextQuestion(){
       num = Math.floor(Math.random() * (119));
       document.getElementById('question').innerHTML = questions[num]["question"];
       document.getElementById('answer1').innerHTML = questions[num]["options"][0];
@@ -97,10 +97,15 @@ https://quiz.nesa.nsw.edu.au/home
       }
     };
     
+    //skip question
+    document.getElementById('newQuestion').onclick =  function () {
+      nextQuestion();
+    };
+    
     // Select answer
     $('button').on('click', function(evt) {
       if ($(this).attr("class").includes("correct")) {
-      	alert("corect");
+      	nextQuestion();
       }
     });
 
