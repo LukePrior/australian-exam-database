@@ -7,33 +7,11 @@ https://educationstandards.nsw.edu.au/wps/portal/nesa/11-12/resources/hsc-exam-p
 https://quiz.nesa.nsw.edu.au/home
 
 ```
-<style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-  padding: 10px;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-body {
-	text-align: center;
-}
-img {
-	max-width: 100%;
-}
-</style>
-```
-
-```
 <!DOCTYPE html>
 <html>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <body>
-    <input type="button" id="playButton" value="Play"/>
-    <input type="button" id="pauseButton" value="Pause"/>
-    <input type="button" id="resumeButton" value="Resume"/>
-    <input type="button" id="stopButton" value="Stop"/>
+    <input type="button" id="playButton" value="Play/Pause"/>
     <br><br>
     Text Size: <input type="range" min="1.2" max="2.6" step=".2" id="slider" /><br><br>
     <div id="question">
@@ -55,41 +33,28 @@ img {
     }
     
     document.getElementById('playButton').onclick = function(){
-    	var text = document.getElementById('question').innerHTML;
-      
-      text = text.replace(/<br>/g, "\n");
-      text = text.replace(/<table>/g, "");
-      text = text.replace(/<tr>/g, "\n");
-      text = text.replace(/<\/td>/g, ".\n");
-      text = text.replace(/<\/th>/g, ".\n");
-      text = text.replace(/<\/tr>/g, "");
-      text = text.replace(/<td>/g, "");
-      text = text.replace(/<th>/g, "");
-      text = text.replace(/<tbody>/g, "");
-      text = text.replace(/<\/tbody>/g, "");
-      text = text.replace(/<\/table>/g, "");
-      utterance = new SpeechSynthesisUtterance();
-      utterance.text = text;
-      speechSynthesis.speak(utterance);
+          if (speechSynthesis.paused || speechSynthesis.speaking) {
+          	speechSynthesis.cancel();
+          } else {
+            var text = document.getElementById('question').innerHTML;
+
+            text = text.replace(/<br>/g, "\n");
+            text = text.replace(/<table>/g, "");
+            text = text.replace(/<tr>/g, "\n");
+            text = text.replace(/<\/td>/g, ".\n");
+            text = text.replace(/<\/th>/g, ".\n");
+            text = text.replace(/<\/tr>/g, "");
+            text = text.replace(/<td>/g, "");
+            text = text.replace(/<th>/g, "");
+            text = text.replace(/<tbody>/g, "");
+            text = text.replace(/<\/tbody>/g, "");
+            text = text.replace(/<\/table>/g, "");
+
+            utterance = new SpeechSynthesisUtterance();
+            utterance.text = text;
+            speechSynthesis.speak(utterance);
+        }
     }
-    
-    document.getElementById('pauseButton').onclick = function(){
-        if (speechSynthesis) {
-          speechSynthesis.pause();
-        }
-    };
-
-    document.getElementById('resumeButton').onclick = function(){
-        if (speechSynthesis) {
-          speechSynthesis.resume();
-        }
-    };
-
-    document.getElementById('stopButton').onclick = function(){
-        if (speechSynthesis) {
-          speechSynthesis.cancel();
-        }
-    };
     
   </script>
   <style>
