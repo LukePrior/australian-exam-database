@@ -42,16 +42,10 @@ https://quiz.nesa.nsw.edu.au/home
             var text = document.getElementById('question').innerHTML;
 
             text = text.replace(/<br>/g, "\n");
-            text = text.replace(/<table>/g, "");
             text = text.replace(/<tr>/g, "\n");
             text = text.replace(/<\/td>/g, ".\n");
             text = text.replace(/<\/th>/g, ".\n");
-            text = text.replace(/<\/tr>/g, "");
-            text = text.replace(/<td>/g, "");
-            text = text.replace(/<th>/g, "");
-            text = text.replace(/<tbody>/g, "");
-            text = text.replace(/<\/tbody>/g, "");
-            text = text.replace(/<\/table>/g, "");
+            text = text.replace(/<img.*?alt="(.*?)"[^\>]*>/g, '$1.');
 
             utterance = new SpeechSynthesisUtterance();
             utterance.lang = 'en-AU';
@@ -103,12 +97,13 @@ https://quiz.nesa.nsw.edu.au/home
       text-decoration: none;
       display: inline-block;
       font-size: 1em;
-      display: flex;
+
     }
     .answers {
       display: inline-flex;
       flex-direction: row;
       justify-content: center;
+      flex-wrap: wrap;
     }
   </style>
 </html>
