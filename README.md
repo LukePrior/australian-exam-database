@@ -48,13 +48,7 @@ https://quiz.nesa.nsw.edu.au/home
             text = text.replace(/<img.*?alt="(.*?)"[^\>]*>/g, '$1.');
             
             text += "\n";
-            text += document.getElementById('answer1').textContent;
-            text += "\n";
-            text += document.getElementById('answer2').textContent;
-            text += "\n";
-            text += document.getElementById('answer3').textContent;
-            text += "\n";
-            text += document.getElementById('answer4').textContent;
+            text += [document.getElementById('answer1').textContent, document.getElementById('answer2').textContent, document.getElementById('answer3').textContent, document.getElementById('answer4').textContent].join("\n");
 
             utterance = new SpeechSynthesisUtterance();
             utterance.lang = 'en-AU';
