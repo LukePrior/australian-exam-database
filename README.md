@@ -46,6 +46,15 @@ https://quiz.nesa.nsw.edu.au/home
             text = text.replace(/<\/td>/g, ".\n");
             text = text.replace(/<\/th>/g, ".\n");
             text = text.replace(/<img.*?alt="(.*?)"[^\>]*>/g, '$1.');
+            
+            text += "\n";
+            text += document.getElementById('answer1').textContent;
+            text += "\n";
+            text += document.getElementById('answer2').textContent;
+            text += "\n";
+            text += document.getElementById('answer3').textContent;
+            text += "\n";
+            text += document.getElementById('answer4').textContent;
 
             utterance = new SpeechSynthesisUtterance();
             utterance.lang = 'en-AU';
@@ -70,6 +79,8 @@ https://quiz.nesa.nsw.edu.au/home
       document.getElementById('answer3').innerHTML = questions[num]["options"][2];
       document.getElementById('answer4').innerHTML = questions[num]["options"][3];
     }
+    
+    
     
   </script>
   <style>
