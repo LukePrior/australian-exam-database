@@ -14,8 +14,9 @@ https://quiz.nesa.nsw.edu.au/home
   	<input type="button" id="newQuestion" value="Next Q"/>
     <input type="button" id="playButton" value="Play/Pause"/>
     <br><br>
-    Text Size: <input type="range" min="1" max="3" step=".2" value="1" id="slider" /><br><br>
-    <div id="question">
+    Text Size: <input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><br><br>
+    <div id="content">
+    <div id="question" class="question">
     </div>
     <br><br>
     <div id="answers" class="answers">
@@ -24,12 +25,13 @@ https://quiz.nesa.nsw.edu.au/home
         <button class="button" id="answer3"></button><br>
         <button class="button" id="answer4"></button><br>
     </div>
+    </div>
   </body>
   <script>
     // Text size
     $('input').on('input', function() {
       var v = $(this).val();
-      $('#question').css('font-size', v + 'em')
+      $('.question').css('font-size', v + 'em')
       $('.button').css('font-size', v + 'em')
     });
     
@@ -65,6 +67,7 @@ https://quiz.nesa.nsw.edu.au/home
       questions = data;
     });
     
+    // Next question
     document.getElementById('newQuestion').onclick = function(){
       num = Math.floor(Math.random() * (119));
       document.getElementById('question').innerHTML = questions[num]["question"];
@@ -72,9 +75,35 @@ https://quiz.nesa.nsw.edu.au/home
       document.getElementById('answer2').innerHTML = questions[num]["options"][1];
       document.getElementById('answer3').innerHTML = questions[num]["options"][2];
       document.getElementById('answer4').innerHTML = questions[num]["options"][3];
-    }
+      document.getElementById('answer1').classList.remove("correct");
+      document.getElementById('answer2').classList.remove("correct");
+      document.getElementById('answer3').classList.remove("correct");
+      document.getElementById('answer4').classList.remove("correct");
+      for (var i = 0; i < questions[num]["answer"].length; i++) {
+          switch (questions[num]["answer"][i]) {
+          	case 0:
+              document.getElementById('answer1').classList.add("correct");
+              break;
+            case 1:
+              document.getElementById('answer2').classList.add("correct");
+              break;
+            case 2:
+              document.getElementById('answer3').classList.add("correct");
+              break;
+            case 3:
+              document.getElementById('answer4').classList.add("correct");
+              break;
+          }
+      }
+    };
     
-    
+    // Select answer
+    $('button').on('click', function(evt) {
+      if ($(this).attr("class").includes("correct")) {
+      	alert("corect");
+      }
+    });
+
     
   </script>
   <style>
@@ -92,23 +121,34 @@ https://quiz.nesa.nsw.edu.au/home
     img {
         max-width: 100%;
     }
+    .question {
+    	font-size: 1.2em;
+        transition-duration: 0.4s;
+    }
     .button {
-      background-color: #4CAF50; /* Green */
-      border: none;
-      color: white;
-      padding: 1em 2em;
-      margin: 0.25em 0.125em;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 1em;
-
+        border: solid;
+        padding: 1em 2em;
+        margin: 0.25em 0.125em;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1.2em;
+        flex: 1 1 0px;
+        border-width: thin;
+        border-color: Gainsboro;
+        transition-duration: 0.4s;
+  		cursor: pointer;
+    }
+    .button:hover {background-color: Gainsboro;}
+    .button:active {
+        box-shadow: box-shadow:
+          7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+        transform: translateY(0.25em);
     }
     .answers {
-      display: inline-flex;
-      flex-direction: row;
-      justify-content: center;
-      flex-wrap: wrap;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-wrap: wrap;
     }
   </style>
 </html>
