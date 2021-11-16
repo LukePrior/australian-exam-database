@@ -11,11 +11,18 @@ https://quiz.nesa.nsw.edu.au/home
 <html>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <body>
+  	<input type="button" id="newQuestion" value="Next Q"/>
     <input type="button" id="playButton" value="Play/Pause"/>
     <br><br>
-    Text Size: <input type="range" min="1.2" max="2.6" step=".2" id="slider" /><br><br>
+    Text Size: <input type="range" min="1" max="3" step=".2" value="1" id="slider" /><br><br>
     <div id="question">
-      The table shows hypothetical data for the Australian economy over a two-year period.<br/><br/><table><tr><th></th><th>Year 1</th><th>Year 2</th></tr><tr><td>Consumer price index (CPI)</td><td>100</td><td>103</td></tr><tr><td>Employed persons ('000)</td><td>1800</td><td>2000</td></tr><tr><td>Unemployed persons ('000)</td><td>200</td><td>125</td></tr><tr><td>Population ('000)</td><td>2008</td><td>2095</td></tr></table><br/>Which row of the table below best accounts for the changes in CPI and unemployment rate from Year 1 to Year 2?<br/><br/><table><tr><th></th><th>Reason for change in CPI</th><th>Reason for change in unemployment rate</th></tr><tr><td>A</td><td>Reduction in the cash rate</td><td>Removal of government initiatives for education and training</td></tr><tr><td>B</td><td>Appreciation of the Australian dollar</td><td>Increase in domestic investment</td></tr><tr><td>C</td><td>Increase in import tariffs</td><td>Global economic downturn</td></tr><tr><td>D</td><td>Increase in consumer confidence</td><td>An appreciation in the currency of a major trading partner</td></tr></table>
+    </div>
+    <br><br>
+    <div id="answers" class="answers">
+    	<button class="button" id="answer1"></button><br>
+        <button class="button" id="answer2"></button><br>
+        <button class="button" id="answer3"></button><br>
+        <button class="button" id="answer4"></button><br>
     </div>
   </body>
   <script>
@@ -23,16 +30,12 @@ https://quiz.nesa.nsw.edu.au/home
     $('input').on('input', function() {
       var v = $(this).val();
       $('#question').css('font-size', v + 'em')
+      $('.button').css('font-size', v + 'em')
     });
     
     //TTS
-    if ('speechSynthesis' in window) {
-    	var utterance = new SpeechSynthesisUtterance();
-    	utterance.lang = 'en-AU';
-    	utterance.rate = 0.8;
-    }
-    
     document.getElementById('playButton').onclick = function(){
+    	if ('speechSynthesis' in window) {
           if (speechSynthesis.paused || speechSynthesis.speaking) {
           	speechSynthesis.cancel();
           } else {
@@ -51,9 +54,27 @@ https://quiz.nesa.nsw.edu.au/home
             text = text.replace(/<\/table>/g, "");
 
             utterance = new SpeechSynthesisUtterance();
+            utterance.lang = 'en-AU';
+    		utterance.rate = 0.7;
             utterance.text = text;
             speechSynthesis.speak(utterance);
         }
+      }
+    }
+    
+    //Get questions
+    var questions = []
+    $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json?token=AFLTJ5VIKGBXGVMIPPY5GP3BTSUMC', function(data) {
+      questions = data;
+    });
+    
+    document.getElementById('newQuestion').onclick = function(){
+      num = Math.floor(Math.random() * (119));
+      document.getElementById('question').innerHTML = questions[num]["question"];
+      document.getElementById('answer1').innerHTML = questions[num]["options"][0];
+      document.getElementById('answer2').innerHTML = questions[num]["options"][1];
+      document.getElementById('answer3').innerHTML = questions[num]["options"][2];
+      document.getElementById('answer4').innerHTML = questions[num]["options"][3];
     }
     
   </script>
@@ -71,6 +92,23 @@ https://quiz.nesa.nsw.edu.au/home
     }
     img {
         max-width: 100%;
+    }
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 1em 2em;
+      margin: 0.25em 0.125em;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 1em;
+      display: flex;
+    }
+    .answers {
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
     }
   </style>
 </html>
