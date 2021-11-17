@@ -11,8 +11,10 @@ HTML
 ```
 <div style="display:flex;justify-content:center;align-items:center;gap:0.5em;">
   <input type="button" id="newQuestion" value="Skip"/>
+  <input type="button" id="helpButton" value="Help"/>
   <input type="button" id="playButton" value="Play/Pause"/>
   <span style="font-size: 1.2em">A</span><input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><span style="font-size: 2em">A</span>
+  <p>Question: <span id="questionCounter"></span>/<span id="questionCount"></span></p>
 </div>
 <br>
 <div id="content">
@@ -38,7 +40,17 @@ $('input').on('input', function() {
   $('.button').css('font-size', v + 'em')
 });
 
-//TTS
+// Shuffle array
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+// TTS
 $('#playButton').on('click', function(){
   if ('speechSynthesis' in window) {
     if (speechSynthesis.paused || speechSynthesis.speaking) {
@@ -49,7 +61,6 @@ $('#playButton').on('click', function(){
       text = text.replace(/<br>|<tr>/g, "\n");
       text = text.replace(/<\/td>|<\/th>/g, ".\n");
       text = text.replace(/<img.*?alt="(.*?)"[^\>]*>/g, '$1.');
-      console.log(text);
 
       text += "\n";
       text += [$("#answer1").text(), $("#answer2").text(), $("#answer3").text(), $("#answer4").text()].join("\n");
@@ -63,54 +74,116 @@ $('#playButton').on('click', function(){
   }
 });
 
-//Get questions
+// Get questions
 var questions = [];
 $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json?token=AFLTJ5VIKGBXGVMIPPY5GP3BTSUMC', function(data) {
   questions = data;
+  generateQuestions(20);
+  nextQuestion();
 });
 
-var num;
+// Questions
+var questionList = [];
+
+// List of questions
+function generateQuestions(num){
+  questionList = [];
+  for (var i = 0; i < 120; i++) {
+    questionList.push(questions[i].id);
+  }
+  shuffleArray(questionList);
+  if (generateQuestions.arguments != 0) {
+  	questionList = questionList.slice(0, num);
+  }
+}
+
+// Start set
+var index = 0;
 
 // Next question
+var num;
 function nextQuestion(){
-  num = Math.floor(Math.random() * (119));
+  if (index == questionList.length) {
+    // Set completed
+    calculateFinalScore();
+    index = 0;
+    completed = {};
+  }
+  question = questionList[index];
+  num = questions.findIndex(item => item.id === question);
+  
   $("#question").html(questions[num].question);
   $("#answer1").html(questions[num].options[0]);
   $("#answer2").html(questions[num].options[1]);
   $("#answer3").html(questions[num].options[2]);
   $("#answer4").html(questions[num].options[3]);
+  
+  $("#questionCounter").text(index+1);
+  $("#questionCount").text(questionList.length);
+  
+  index += 1;
 }
 
-//skip question
-$('#newQuestion').on('click', function(){
+// Update question status
+var completed = {};
+function updateQuestionStatus (outcome) {
+	if (outcome == "correct") {
+  	completed[questionList[index-1]] = "correct";
+  } else if (outcome == "incorrect") {
+    completed[questionList[index-1]] = "incorrect";
+  } else {
+  	completed[questionList[index-1]] = "skipped";
+  }
   nextQuestion();
+}
+
+// Calculate final score
+function calculateFinalScore () {
+	var correct = [];
+  var incorrect = [];
+  var skipped = [];
+  
+  for (var question in completed) {
+  	if (completed.hasOwnProperty(question)) {
+    	if (completed[question] == "correct") {
+      	correct.push(question);
+      } else if (completed[question] == "incorrect") {
+      	incorrect.push(question);
+      } else {
+        skipped.push(question);
+      }
+    }
+  }
+  
+  alert(correct.length + "/" + questionList.length);
+}
+
+// Help button
+$('#helpButton').on('click', function(){
+  var question = questions[num];
+  console.log("Question source: " + question.year + " " + question.source);
+  console.log("Question number: " + question.number);
+  console.log("Question content: " + question.topic + " - " + question.content);
+  console.log("Question oucomes: " + question.outcomes.join(", "));
+});
+
+// Skip question
+$('#newQuestion').on('click', function(){
+  updateQuestionStatus("skipped");
 });
 
 // Check answer
-$('button').on('click', function(evt) {
+$('button').on('click', function() {
+  var id = $(this).attr("id");
+  var correct = false;
   for (var i = 0; i < questions[num].answer.length; i++) {
-    switch (questions[num].answer[i]) {
-      case 0:
-        if ($(this).attr("id") == "answer1") {
-          nextQuestion();
-        }
-        break;
-      case 1:
-        if ($(this).attr("id") == "answer2") {
-          nextQuestion();
-        }
-        break;
-      case 2:
-        if ($(this).attr("id") == "answer3") {
-          nextQuestion();
-        }
-        break;
-      case 3:
-        if ($(this).attr("id") == "answer4") {
-          nextQuestion();
-        }
-        break;
+    if (questions[num].answer[i] == 0 && id == "answer1" || questions[num].answer[i] == 1 && id == "answer2" || questions[num].answer[i] == 2 && id == "answer3" || questions[num].answer[i] == 3 && id == "answer4") {
+      updateQuestionStatus("correct");
+      correct = true;
     }
+  }
+  if (!correct) {
+  	updateQuestionStatus("incorrect");
   }
 });
 ```
