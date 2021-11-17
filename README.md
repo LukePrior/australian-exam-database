@@ -12,6 +12,7 @@ HTML
 <div style="display:flex;justify-content:center;align-items:center;gap:0.5em;">
   <input type="button" id="newQuestion" value="Skip"/>
   <input type="button" id="helpButton" value="Help"/>
+  <input type="button" id="exitButton" value="Exit"/>
   <input type="button" id="playButton" value="Play/Pause"/>
   <span style="font-size: 1.2em">A</span><input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><span style="font-size: 2em">A</span>
   <p>Question: <span id="questionCounter"></span>/<span id="questionCount"></span></p>
@@ -155,7 +156,37 @@ function calculateFinalScore () {
     }
   }
   
-  alert(correct.length + "/" + questionList.length);
+  var incorrectTopics = [];
+  for (var i = 0; i < incorrect.length; i++) {
+  	var num = questions.findIndex(item => item.id === incorrect[i]);
+    incorrectTopics.push(questions[num].content);
+  }
+  
+  var correctTopics = [];
+  for (var i = 0; i < correct.length; i++) {
+  	var num = questions.findIndex(item => item.id === correct[i]);
+    correctTopics.push(questions[num].content);
+  }
+
+  console.log("Weaknesses: " + topKFrequent(incorrectTopics, 3).join(", "));
+  console.log("Strengths: " + topKFrequent(correctTopics, 3).join(", "));
+  
+  alert(correct.length + "/" + (correct.length + incorrect.length) + ", " + skipped.length + " skipped");
+}
+
+// return k most common items from list
+function topKFrequent(list, k) {
+  let hash = {}
+
+  for (let item of list) {
+    if (!hash[item]) hash[item] = 0
+    hash[item]++
+  }
+
+  const hashToArray = Object.entries(hash)
+  const sortedArray = hashToArray.sort((a,b) => b[1] - a[1])
+  const sortedElements = sortedArray.map(item => item[0])
+  return sortedElements.slice(0, k)
 }
 
 // Help button
@@ -170,6 +201,11 @@ $('#helpButton').on('click', function(){
 // Skip question
 $('#newQuestion').on('click', function(){
   updateQuestionStatus("skipped");
+});
+
+// Exit set
+$('#exitButton').on('click', function(){
+  calculateFinalScore();
 });
 
 // Check answer
