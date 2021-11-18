@@ -6,10 +6,6 @@ https://educationstandards.nsw.edu.au/wps/portal/nesa/11-12/resources/hsc-exam-p
 
 https://quiz.nesa.nsw.edu.au/home
 
-only keep in list if good > 2 remove if any wrong
-
-worst by percentage
-
 HTML
 
 ```
