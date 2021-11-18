@@ -59,7 +59,7 @@ function shuffleArray(array) {
 }
 
 // TTS
-$('#playButton').on('click', function(){
+$('#playButton').on('click', function() {
   if ('speechSynthesis' in window) {
     if (speechSynthesis.paused || speechSynthesis.speaking) {
       speechSynthesis.cancel();
@@ -90,19 +90,19 @@ $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/
 });
 
 // List of questions
-function generateQuestions(num){
+function generateQuestions(num) {
   questionList = [];
   for (var i = 0; i < 120; i++) {
     questionList.push(questions[i].id);
   }
   shuffleArray(questionList);
   if (generateQuestions.arguments != 0) {
-  	questionList = questionList.slice(0, num);
+    questionList = questionList.slice(0, num);
   }
 }
 
 // Next question
-function nextQuestion(){
+function nextQuestion() {
   if (index == questionList.length) {
     // Set completed
     calculateFinalScore();
@@ -111,83 +111,153 @@ function nextQuestion(){
   }
   question = questionList[index];
   num = questions.findIndex(item => item.id === question);
-  
+
   $("#question").html(questions[num].question);
   $("#answer1").html(questions[num].options[0]);
   $("#answer2").html(questions[num].options[1]);
   $("#answer3").html(questions[num].options[2]);
   $("#answer4").html(questions[num].options[3]);
-  
-  $("#questionCounter").text(index+1);
+
+  $("#questionCounter").text(index + 1);
   $("#questionCount").text(questionList.length);
-  
+
   index += 1;
 }
 
 // Update question status
-function updateQuestionStatus (outcome) {
-	if (outcome == "correct") {
-  	completed[questionList[index-1]] = {"status": "correct", "num": num};
+function updateQuestionStatus(outcome) {
+  if (outcome == "correct") {
+    completed[questionList[index - 1]] = {
+      "status": "correct",
+      "num": num
+    };
   } else if (outcome == "incorrect") {
-    completed[questionList[index-1]] = {"status": "incorrect", "num": num};
+    completed[questionList[index - 1]] = {
+      "status": "incorrect",
+      "num": num
+    };
   } else {
-  	completed[questionList[index-1]] = {"status": "skipped", "num": num};
+    completed[questionList[index - 1]] = {
+      "status": "skipped",
+      "num": num
+    };
   }
   nextQuestion();
 }
 
 // Calculate final score
-function calculateFinalScore () {
-	var correct = [];
+function calculateFinalScore() {
+  var correct = [];
   var incorrect = [];
   var skipped = [];
   var incorrectTopics = [];
   var correctTopics = [];
-  
+  var allTopics = [];
+
   for (var question in completed) {
-  	if (completed.hasOwnProperty(question)) {
+    if (completed.hasOwnProperty(question)) {
       var content = questions[completed[question].num].content;
-    	if (completed[question].status == "correct") {
-      	correct.push(question);
+      if (completed[question].status == "correct") {
+        correct.push(question);
         correctTopics.push(content);
+        allTopics.push(content);
       } else if (completed[question].status == "incorrect") {
-      	incorrect.push(question);
+        incorrect.push(question);
         incorrectTopics.push(content);
+        allTopics.push(content);
       } else {
         skipped.push(question);
       }
     }
   }
   
-  let hash = {}
-  
-  for (let item of correctTopics) {
-    if (!hash[item]) hash[item] = 0
-    hash[item]++
-  }
+  var topicStrengths = calculateStrengths(correctTopics, incorrectTopics);
+  var topicWeaknesses = calculateWeaknesses(allTopics, incorrectTopics);
 
-  for (let item of incorrectTopics) {
-    if (!hash[item]) hash[item] = 0
-    hash[item]--
-  }
-  
-  var sortable = [];
-  for (var topic in hash) {
-    sortable.push([topic, hash[topic]]);
-  }
-  
-  sortable.sort(function(a, b) {
-    return a[1] - b[1];
-	});
+  console.log("Strengths: " + topicStrengths.join(", "));
+  console.log("Weaknesses: " + topicWeaknesses.join(", "));
 
-  console.log(sortable);
-  
   alert(correct.length + "/" + (correct.length + incorrect.length) + ", " + skipped.length + " skipped");
 }
 
+// Calculate strengths
+function calculateStrengths (correctTopics, incorrectTopics) {
+  // Strengths
+  var correctHash = {}
+  var topicStrengths = [];
+  var topicStrengthsFinal = [];
+
+  for (var i = correctTopics.length; i >= 0; i--) {
+    if (incorrectTopics.includes(correctTopics[i])) {
+      correctTopics.splice(i, 1);
+    }
+  }
+
+  for (let item of correctTopics) {
+    if (!correctHash[item]) correctHash[item] = 0
+    correctHash[item]++
+  }
+
+  // Only keep correct answers above 1
+  for (var topic in correctHash) {
+    if (correctHash.hasOwnProperty(topic)) {
+      if (correctHash[topic] > 1) topicStrengths.push([topic, correctHash[topic]]);
+    }
+  }
+
+  // Orders topics best to worst
+  topicStrengths.sort(function(a, b) {
+    return b[1] - a[1];
+  });
+
+	// Select best 3 topics
+  topicStrengthsFinal = topicStrengths.slice(0, 3).map(function(value, index) {
+    return value[0];
+  });
+  
+  return topicStrengthsFinal;
+}
+
+// Calculate weaknesses
+function calculateWeaknesses (allTopics, incorrectTopics) {
+	// Weaknesses
+  var allHash = {}
+  var incorrectHash = {}
+  var topicWeaknesses = [];
+  var topicWeaknessesFinal = [];
+
+  for (let item of allTopics) {
+    if (!allHash[item]) allHash[item] = 0
+    allHash[item]++
+  }
+
+  for (let item of incorrectTopics) {
+    if (!incorrectHash[item]) incorrectHash[item] = 0
+    incorrectHash[item]++
+  }
+
+  // Calculate percentage incorrect for each topic with > 1 entry
+  for (var topic in incorrectHash) {
+    if (incorrectHash.hasOwnProperty(topic)) {
+      if (incorrectHash[topic] > 1) topicWeaknesses.push([topic, Math.round((incorrectHash[topic] / allHash[topic]) * 100)]);
+    }
+  }
+
+  // Orders topics worst to best
+  topicWeaknesses.sort(function(a, b) {
+    return b[1] - a[1];
+  });
+
+  // Select worst 3 topics
+  topicWeaknessesFinal = topicWeaknesses.slice(0, 3).map(function(value, index) {
+    return value[0];
+  });
+  
+  return topicWeaknessesFinal;
+}
 
 // Help button
-$('#helpButton').on('click', function(){
+$('#helpButton').on('click', function() {
   var question = questions[num];
   console.log("Question source: " + question.year + " " + question.source);
   console.log("Question number: " + question.number);
@@ -196,12 +266,12 @@ $('#helpButton').on('click', function(){
 });
 
 // Skip question
-$('#newQuestion').on('click', function(){
+$('#newQuestion').on('click', function() {
   updateQuestionStatus("skipped");
 });
 
 // Exit set
-$('#exitButton').on('click', function(){
+$('#exitButton').on('click', function() {
   calculateFinalScore();
   completed = {};
 });
@@ -217,7 +287,7 @@ $('button').on('click', function() {
     }
   }
   if (!correct) {
-  	updateQuestionStatus("incorrect");
+    updateQuestionStatus("incorrect");
   }
 });
 ```
