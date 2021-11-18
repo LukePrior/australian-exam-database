@@ -38,6 +38,13 @@ HTML
 JS
 
 ```
+// Initial vars
+var completed = {};
+var questions = [];
+var index = 0;
+var questionList = [];
+var num;
+
 // Text size slider
 $('input').on('input', function() {
   var v = $(this).val();
@@ -47,12 +54,12 @@ $('input').on('input', function() {
 
 // Shuffle array
 function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
 }
 
 // TTS
@@ -80,15 +87,11 @@ $('#playButton').on('click', function(){
 });
 
 // Get questions
-var questions = [];
 $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json?token=AFLTJ5VIKGBXGVMIPPY5GP3BTSUMC', function(data) {
   questions = data;
   generateQuestions(20);
   nextQuestion();
 });
-
-// Questions
-var questionList = [];
 
 // List of questions
 function generateQuestions(num){
@@ -102,11 +105,7 @@ function generateQuestions(num){
   }
 }
 
-// Start set
-var index = 0;
-
 // Next question
-var num;
 function nextQuestion(){
   if (index == questionList.length) {
     // Set completed
@@ -130,14 +129,13 @@ function nextQuestion(){
 }
 
 // Update question status
-var completed = {};
 function updateQuestionStatus (outcome) {
 	if (outcome == "correct") {
-  	completed[questionList[index-1]] = "correct";
+  	completed[questionList[index-1]] = {"status": "correct", "num": num};
   } else if (outcome == "incorrect") {
-    completed[questionList[index-1]] = "incorrect";
+    completed[questionList[index-1]] = {"status": "incorrect", "num": num};
   } else {
-  	completed[questionList[index-1]] = "skipped";
+  	completed[questionList[index-1]] = {"status": "skipped", "num": num};
   }
   nextQuestion();
 }
@@ -147,51 +145,50 @@ function calculateFinalScore () {
 	var correct = [];
   var incorrect = [];
   var skipped = [];
+  var incorrectTopics = [];
+  var correctTopics = [];
   
   for (var question in completed) {
   	if (completed.hasOwnProperty(question)) {
-    	if (completed[question] == "correct") {
+      var content = questions[completed[question].num].content;
+    	if (completed[question].status == "correct") {
       	correct.push(question);
-      } else if (completed[question] == "incorrect") {
+        correctTopics.push(content);
+      } else if (completed[question].status == "incorrect") {
       	incorrect.push(question);
+        incorrectTopics.push(content);
       } else {
         skipped.push(question);
       }
     }
   }
   
-  var incorrectTopics = [];
-  for (var i = 0; i < incorrect.length; i++) {
-  	var num = questions.findIndex(item => item.id === incorrect[i]);
-    incorrectTopics.push(questions[num].content);
-  }
-  
-  var correctTopics = [];
-  for (var i = 0; i < correct.length; i++) {
-  	var num = questions.findIndex(item => item.id === correct[i]);
-    correctTopics.push(questions[num].content);
-  }
-
-  console.log("Weaknesses: " + topKFrequent(incorrectTopics, 3).join(", "));
-  console.log("Strengths: " + topKFrequent(correctTopics, 3).join(", "));
-  
-  alert(correct.length + "/" + (correct.length + incorrect.length) + ", " + skipped.length + " skipped");
-}
-
-// return k most common items from list
-function topKFrequent(list, k) {
   let hash = {}
-
-  for (let item of list) {
+  
+  for (let item of correctTopics) {
     if (!hash[item]) hash[item] = 0
     hash[item]++
   }
 
-  const hashToArray = Object.entries(hash)
-  const sortedArray = hashToArray.sort((a,b) => b[1] - a[1])
-  const sortedElements = sortedArray.map(item => item[0])
-  return sortedElements.slice(0, k)
+  for (let item of incorrectTopics) {
+    if (!hash[item]) hash[item] = 0
+    hash[item]--
+  }
+  
+  var sortable = [];
+  for (var topic in hash) {
+    sortable.push([topic, hash[topic]]);
+  }
+  
+  sortable.sort(function(a, b) {
+    return a[1] - b[1];
+	});
+
+  console.log(sortable);
+  
+  alert(correct.length + "/" + (correct.length + incorrect.length) + ", " + skipped.length + " skipped");
 }
+
 
 // Help button
 $('#helpButton').on('click', function(){
@@ -210,6 +207,7 @@ $('#newQuestion').on('click', function(){
 // Exit set
 $('#exitButton').on('click', function(){
   calculateFinalScore();
+  completed = {};
 });
 
 // Check answer
