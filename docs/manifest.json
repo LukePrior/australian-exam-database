@@ -5,5 +5,17 @@
     "background_color": "#2196f3",
     "display": "standalone",
     "scope": "/australian-exam-database/",
-    "start_url": "/australian-exam-database/"
+    "start_url": "/australian-exam-database/",
+    "icons": [
+        {
+          "src": "/img/icon_x192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        },
+        {
+            "src": "/img/icon_x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+          }
+      ]
 }
