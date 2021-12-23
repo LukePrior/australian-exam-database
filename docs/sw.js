@@ -1,4 +1,3 @@
-
 var APP_PREFIX = 'AustralianExamDatabase'     // Identifier for this app (this needs to be consistent across every cache update)
 var VERSION = '1.0.0'              // Version of the off-line cache (change this value everytime you want to update cache)
 var CACHE_NAME = APP_PREFIX + VERSION
