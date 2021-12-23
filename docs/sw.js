@@ -9,6 +9,7 @@ var URLS = [                            // Add URL you want to cache in this lis
   '/australian-exam-database/css/main.css',
   '/australian-exam-database/js/jquery.min.js',
   '/australian-exam-database/js/micromodal.min.js',
+  'https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json'
 ]
 
 // Respond with cached resources
