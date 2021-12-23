@@ -6,6 +6,7 @@ var URLS = [                            // Add URL you want to cache in this lis
   '/australian-exam-database/',                     // If you have separate JS/CSS files,
   '/australian-exam-database/index.html',           // add path to those files here
   '/australian-exam-database/index.js',
+  '/australian-exam-database/manifest.js',
   '/australian-exam-database/css/main.css',
   '/australian-exam-database/js/jquery.min.js',
   '/australian-exam-database/js/micromodal.min.js',
