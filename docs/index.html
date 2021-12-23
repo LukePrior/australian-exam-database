@@ -34,5 +34,10 @@
     <p>Modal text</p>
   </div>
 </div>
+<script>
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/australian-exam-database/sw.js', {scope: '/australian-exam-database/'})
+  }
+</script>
 </body>
 </html>
