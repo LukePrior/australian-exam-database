@@ -92,7 +92,7 @@ $(function() {
       };
     }
     var content: modalContent = {} as modalContent;
-    content.title = "Question: " + num + " " + completed[questionList[index - 1]].status;
+    content.title = completed[questionList[index - 1]].status;
     content.type = "status";
     content.content = "";
     showModal(content);
@@ -250,7 +250,7 @@ $(function() {
     var myModal = $("#myModal");
     myModal.find(".modal-heading").text(content.title);
     myModal.find(".modal-text").text(content.content);
-    myModal.attr("data-type", content.type);
+    myModal.data("type", content.type);
     myModal.css("display", "block");
   }
 
@@ -258,7 +258,6 @@ $(function() {
   function hideModal () {
     var myModal = $("#myModal");
     myModal.css("display", "none");
-    console.log(myModal.data("type"));
     if (myModal.data("type") == "status") {
       nextQuestion();
     }
