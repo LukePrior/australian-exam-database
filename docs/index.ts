@@ -129,9 +129,9 @@ $(function() {
     modalContent.title = "Set Completed";
     modalContent.type = "summary";
     var modalContentTemp = "Score: " + correct.length + "/" + (correct.length + incorrect.length);
-    modalContentTemp += "\nSkipped: " + skipped.length;
-    modalContentTemp += "\n\nStrengths: " + topicStrengths.join(", ");
-    modalContentTemp += "\n\Weaknesses: " + topicWeaknesses.join(", ");
+    modalContentTemp += "<br/>Skipped: " + skipped.length;
+    modalContentTemp += "<br/><br/>Strengths: " + topicStrengths.join(", ");
+    modalContentTemp += "<br/>Weaknesses: " + topicWeaknesses.join(", ");
     modalContent.content = modalContentTemp;
     showModal(modalContent);
   }
@@ -216,9 +216,9 @@ $(function() {
     content.type = "help";
 
     var tempContets = "Question source: " + question.year + " " + question.source;
-    tempContets += "\nQuestion number: " + question.number;
-    tempContets += "\nQuestion content: " + question.topic + " - " + question.content;
-    tempContets += "\nQuestion oucomes: " + question.outcomes.join(", ");
+    tempContets += "<br/>Question number: " + question.number;
+    tempContets += "<br/>Question content: " + question.topic + " - " + question.content;
+    tempContets += "<br/>Question oucomes: " + question.outcomes.join(", ");
     content.content = tempContets;
 
     showModal(content);
