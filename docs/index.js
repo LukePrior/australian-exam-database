@@ -231,6 +231,7 @@ $(function () {
     function hideModal() {
         var myModal = $("#myModal");
         myModal.css("display", "none");
+        console.log(myModal.data("type"));
         if (myModal.data("type") == "status") {
             nextQuestion();
         }
