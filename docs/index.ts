@@ -1,6 +1,7 @@
 interface completed { [id: string]: {status: string, num: number} }
 interface question { id: string, topic: string, content: string, outcomes: string[], year: string, source: string, number: string, marks: string, question:string, options: string[], answer: number[] }
 interface topichash { [topic: string]: number }
+interface modalContent { type: string, title: string, content: string }
 
 // Initial vars
 var completed: completed = {};
@@ -90,7 +91,11 @@ $(function() {
         "num": num
       };
     }
-    showModal(JSON.stringify(completed[questionList[index - 1]]));
+    var content: modalContent;
+    content.title = "Question: " + num + " " + completed[questionList[index - 1]].status;
+    content.type = "status";
+    content.content = "";
+    showModal(content);
   }
 
   // Calculate final score
@@ -201,11 +206,16 @@ $(function() {
   // Help button
   $('#helpButton').on('click', function() {
     var question = questions[num];
-    var content = "Question source: " + question.year + " " + question.source;
-    console.log("Question source: " + question.year + " " + question.source);
-    console.log("Question number: " + question.number);
-    console.log("Question content: " + question.topic + " - " + question.content);
-    console.log("Question oucomes: " + question.outcomes.join(", "));
+    var content: modalContent;
+    content.title = "Question Information";
+    content.type = "help";
+
+    var tempContets = "Question source: " + question.year + " " + question.source;
+    tempContets += "\nQuestion number: " + question.number;
+    tempContets += "\nQuestion content: " + question.topic + " - " + question.content;
+    tempContets += "\nQuestion oucomes: " + question.outcomes.join(", ");
+    content.content = tempContets;
+
     showModal(content);
   });
 
@@ -236,8 +246,8 @@ $(function() {
   });
 
   // Modal show
-  function showModal (content: string) {
-    $("#myModalText").text(content);
+  function showModal (content: modalContent) {
+    $("#myModalText").text(content.content);
     $("#myModal").css("display", "block");
   }
 

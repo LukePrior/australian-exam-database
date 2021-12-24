@@ -78,7 +78,11 @@ $(function () {
                 "num": num
             };
         }
-        showModal(JSON.stringify(completed[questionList[index - 1]]));
+        var content;
+        content.title = "Question: " + num + " " + completed[questionList[index - 1]].status;
+        content.type = "status";
+        content.content = "";
+        showModal(content);
     }
     // Calculate final score
     function calculateFinalScore() {
@@ -182,11 +186,14 @@ $(function () {
     // Help button
     $('#helpButton').on('click', function () {
         var question = questions[num];
-        var content = "Question source: " + question.year + " " + question.source;
-        console.log("Question source: " + question.year + " " + question.source);
-        console.log("Question number: " + question.number);
-        console.log("Question content: " + question.topic + " - " + question.content);
-        console.log("Question oucomes: " + question.outcomes.join(", "));
+        var content;
+        content.title = "Question Information";
+        content.type = "help";
+        var tempContets = "Question source: " + question.year + " " + question.source;
+        tempContets += "\nQuestion number: " + question.number;
+        tempContets += "\nQuestion content: " + question.topic + " - " + question.content;
+        tempContets += "\nQuestion oucomes: " + question.outcomes.join(", ");
+        content.content = tempContets;
         showModal(content);
     });
     // Skip question
@@ -214,7 +221,7 @@ $(function () {
     });
     // Modal show
     function showModal(content) {
-        $("#myModalText").text(content);
+        $("#myModalText").text(content.content);
         $("#myModal").css("display", "block");
     }
     // Modal hide
