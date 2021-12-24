@@ -90,7 +90,7 @@ $(function() {
         "num": num
       };
     }
-    showModal(completed[questionList[index - 1]]);
+    showModal(JSON.stringify(completed[questionList[index - 1]]));
   }
 
   // Calculate final score
@@ -201,10 +201,12 @@ $(function() {
   // Help button
   $('#helpButton').on('click', function() {
     var question = questions[num];
+    var content = "Question source: " + question.year + " " + question.source;
     console.log("Question source: " + question.year + " " + question.source);
     console.log("Question number: " + question.number);
     console.log("Question content: " + question.topic + " - " + question.content);
     console.log("Question oucomes: " + question.outcomes.join(", "));
+    showModal(content);
   });
 
   // Skip question
@@ -234,9 +236,8 @@ $(function() {
   });
 
   // Modal show
-  function showModal (completed) {
-    console.log(completed.status);
-    console.log(questions[completed.num]);
+  function showModal (content: string) {
+    $("#myModalText").text(content);
     $("#myModal").css("display", "block");
   }
 

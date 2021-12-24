@@ -21,7 +21,7 @@
     <input type="button" id="helpButton" value="Help"/>
     <input type="button" id="exitButton" value="Exit"/>
     <input type="button" id="themeButton" value="Theme"/>
-    <span style="font-size: 1.2em">A</span><input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><span style="font-size: 2em">A</span>
+    <!-- <span style="font-size: 1.2em">A</span><input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><span style="font-size: 2em">A</span> -->
     <p>Question: <span id="questionCounter"></span>/<span id="questionCount"></span></p>
   </div>
   <br>
@@ -38,7 +38,9 @@
   <div id="myModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <p>Modal text</p>
+      <div id="myModalText" class="modal-text" style="white-space: pre-line">
+        <p>Modal text</p>
+      </div>
     </div>
   </div>
   <script>
