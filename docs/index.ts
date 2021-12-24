@@ -247,15 +247,20 @@ $(function() {
 
   // Modal show
   function showModal (content: modalContent) {
-    $("#myModalText").text(content.content);
-    $("#myModal").css("display", "block");
+    var myModal = $("#myModal");
+    myModal.find(".modal-heading").text(content.title);
+    myModal.find(".modal-text").text(content.content);
+    myModal.attr("data-type", content.type);
+    myModal.css("display", "block");
   }
 
   // Modal hide
   function hideModal () {
-    $("#myModal").css("display", "none");
-    // check modal type
-    nextQuestion();
+    var myModal = $("#myModal");
+    myModal.css("display", "none");
+    if (myModal.data("type") == "status") {
+      nextQuestion();
+    }
   }
 
   // Modal exit
