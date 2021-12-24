@@ -111,9 +111,15 @@ $(function () {
         }
         var topicStrengths = calculateStrengths(correctTopics, incorrectTopics);
         var topicWeaknesses = calculateWeaknesses(allTopics, incorrectTopics);
-        console.log("Strengths: " + topicStrengths.join(", "));
-        console.log("Weaknesses: " + topicWeaknesses.join(", "));
-        alert(correct.length + "/" + (correct.length + incorrect.length) + ", " + skipped.length + " skipped");
+        var modalContent = {};
+        modalContent.title = "Set Completed";
+        modalContent.type = "summary";
+        var modalContentTemp = "Score: " + correct.length + "/" + (correct.length + incorrect.length);
+        modalContentTemp += "\nSkipped: " + skipped.length;
+        modalContentTemp += "\n\nStrengths: " + topicStrengths.join(", ");
+        modalContentTemp += "\n\Weaknesses: " + topicWeaknesses.join(", ");
+        modalContent.content = modalContentTemp;
+        showModal(modalContent);
     }
     // Calculate strengths
     function calculateStrengths(correctTopics, incorrectTopics) {
