@@ -244,6 +244,7 @@ $(function() {
   // Modal hide
   function hideModal () {
     $("#myModal").css("display", "none");
+    // check modal type
     nextQuestion();
   }
 
