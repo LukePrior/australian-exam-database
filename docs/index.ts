@@ -91,7 +91,7 @@ $(function() {
         "num": num
       };
     }
-    var content: modalContent;
+    var content: modalContent = {} as modalContent;
     content.title = "Question: " + num + " " + completed[questionList[index - 1]].status;
     content.type = "status";
     content.content = "";
@@ -206,7 +206,7 @@ $(function() {
   // Help button
   $('#helpButton').on('click', function() {
     var question = questions[num];
-    var content: modalContent;
+    var content: modalContent = {} as modalContent;
     content.title = "Question Information";
     content.type = "help";
 
