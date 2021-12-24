@@ -47,6 +47,7 @@ $(function () {
             calculateFinalScore();
             index = 0;
             completed = {};
+            return;
         }
         num = questions.findIndex(function (item) { return item.id === questionList[index]; });
         $("#question").html(questions[num].question);
@@ -228,8 +229,8 @@ $(function () {
     // Modal show
     function showModal(content) {
         var myModal = $("#myModal");
-        myModal.find(".modal-heading").text(content.title);
-        myModal.find(".modal-text").text(content.content);
+        myModal.find(".modal-heading").html(content.title);
+        myModal.find(".modal-text").html(content.content);
         myModal.data("type", content.type);
         myModal.css("display", "block");
     }
