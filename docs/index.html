@@ -8,45 +8,12 @@
   <title>Australian Exam Database</title>
 
   <script type="text/javascript" src="js/jquery.min.js"></script>
-  <script type="text/javascript" src="js/micromodal.min.js"></script>
-  <script type="text/javascript" src="index.js"></script>
   <link rel="stylesheet" href="css/main.css">
-  <!-- <link rel="manifest" href="manifest.json"> -->
 </head>
 
 <body>
   <div style="display:flex;justify-content:center;align-items:center;gap:0.5em;">
-    <input type="button" id="newQuestion" value="Skip"/>
-    <input type="button" id="helpButton" value="Help"/>
-    <input type="button" id="exitButton" value="Exit"/>
-    <input type="button" id="themeButton" value="Theme"/>
-    <!-- <span style="font-size: 1.2em">A</span><input type="range" min="1.2" max="2.6" step=".2" value="1.2" id="slider" /><span style="font-size: 2em">A</span> -->
-    <p>Question: <span id="questionCounter"></span>/<span id="questionCount"></span></p>
+    <input type="button" onclick="location.href='/html/quiz.html'" value="Start"/>
   </div>
-  <br>
-  <div id="content">
-    <div id="question" class="question"></div>
-    <br><br>
-    <div id="answers" class="answers">
-      <button class="button" id="answer1"></button><br>
-      <button class="button" id="answer2"></button><br>
-      <button class="button" id="answer3"></button><br>
-      <button class="button" id="answer4"></button><br>
-    </div>
-  </div>
-  <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div class="modal-heading"></div>
-      <div class="modal-text"></div>
-    </div>
-  </div>
-  <!--
-  <script>
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.register('/australian-exam-database/sw.js', {scope: '/australian-exam-database/'})
-    }
-  </script>
-  -->
 </body>
 </html>
