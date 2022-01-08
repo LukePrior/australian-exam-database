@@ -101,10 +101,9 @@ $(function () {
         }
         // Analytics event
         var gtagAction = "Question " + outcome;
-        gtag('event', gtagAction, {
-            'event_category': 'Question Answer',
-            'event_label': questionList[index - 1],
-            'value': 0
+        gtag('event', 'Question Answer', {
+            'event_category': gtagAction,
+            'event_label': questionList[index - 1]
         });
         var content = {};
         content.title = completed[questionList[index - 1]].status;
@@ -228,6 +227,10 @@ $(function () {
         tempContets += "<br/>Question content: " + question.topic + " - " + question.content;
         tempContets += "<br/>Question oucomes: " + question.outcomes.join(", ");
         content.content = tempContets;
+        // Analytics event
+        gtag('event', 'Question Help', {
+            'event_label': question.id
+        });
         showModal(content);
     });
     // Skip question
