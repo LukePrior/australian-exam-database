@@ -3,5 +3,8 @@
         "target": "ES5",
         "watch": true,
         "lib": ["DOM", "ES2021"]
-    }
+    },
+    "include": [
+        "**/*"
+    ],
 }
