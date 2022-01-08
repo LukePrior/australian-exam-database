@@ -3,7 +3,10 @@
         "HSC": {"subject": {
             "Economics": {
                 "questions": "https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json",
-                "resources": "https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/resources/resources.json"
+                "resources": "https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/resources/resources.json",
+                "sets": {
+                    "2020": {}
+                }
             }
         }},
         "VCE": {"subject": {
