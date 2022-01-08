@@ -116,9 +116,10 @@ $(function() {
       };
     }
     // Analytics event
-    gtag('event', 'question', {
+    var gtagAction = "Question " + outcome;
+    gtag('event', gtagAction, {
       'event_category': 'Question Answer',
-      'event_label': 'test',
+      'event_label': questionList[index - 1],
       'value': 0
     });
     var content: modalContent = {} as modalContent;
