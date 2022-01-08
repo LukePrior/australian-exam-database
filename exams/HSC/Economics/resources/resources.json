@@ -1,0 +1,4 @@
+{
+    "base": "https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/resources/",
+    "resources": ["2014-10.png", "2014-15.png", "2014-19.png", "2015-9.png", "2015-13.png", "2016-8.png", "2016-10.png", "2018-15.png", "2018-20.png", "2019-11.png", "2019-19.png", "2020-9.png", "2020-20.png"]
+}
