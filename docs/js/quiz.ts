@@ -115,6 +115,12 @@ $(function() {
         "num": num
       };
     }
+    // Analytics event
+    gtag('event', 'question', {
+      'event_category': 'Question Answer',
+      'event_label': 'test',
+      'value': 0
+    });
     var content: modalContent = {} as modalContent;
     content.title = completed[questionList[index - 1]].status;
     content.type = "status";
