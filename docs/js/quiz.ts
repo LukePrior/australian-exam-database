@@ -9,6 +9,7 @@ var questions: question[] = [];
 var index: number = 0;
 var questionList: string[] = [];
 var num: number;
+var questionIndex;
 
 const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -31,6 +32,21 @@ $(function() {
       array[j] = temp;
     }
   }
+
+  // Get question index
+  $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/questions.json', function(data) {
+    questionIndex = data;
+  });
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const dataset = urlParams.get('set');
+  const datasetParts = dataset.split("-");
+
+  console.log(datasetParts);
+
+  
+  console.log(questionIndex["curriculum"][datasetParts[0]]);
 
   // Get questions
   $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json', function(data) {

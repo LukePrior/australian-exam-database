@@ -4,6 +4,7 @@ var questions = [];
 var index = 0;
 var questionList = [];
 var num;
+var questionIndex;
 var prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 'use strict';
 $(function () {
@@ -22,6 +23,16 @@ $(function () {
             array[j] = temp;
         }
     }
+    // Get question index
+    $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/questions.json', function (data) {
+        questionIndex = data;
+    });
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var dataset = urlParams.get('set');
+    var datasetParts = dataset.split("-");
+    console.log(datasetParts);
+    console.log(questionIndex["curriculum"][datasetParts[0]]);
     // Get questions
     $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json', function (data) {
         questions = data;
