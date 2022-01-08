@@ -1,4 +1,4 @@
-var questionsIndex = {};
+var questionsIndex;
 
 // Get question index
 

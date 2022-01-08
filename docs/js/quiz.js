@@ -26,19 +26,27 @@ $(function () {
     // Get question index
     $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/questions.json', function (data) {
         questionIndex = data;
+        loadQuestionList();
     });
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
     var dataset = urlParams.get('set');
     var datasetParts = dataset.split("-");
-    console.log(datasetParts);
-    console.log(questionIndex["curriculum"][datasetParts[0]]);
+    function loadQuestionList() {
+        var questionuUrl = questionIndex["curriculum"][datasetParts[0]]["subject"][datasetParts[1]]["questions"];
+        var resourcesuUrl = questionIndex["curriculum"][datasetParts[0]]["subject"][datasetParts[1]]["resources"];
+        var set = questionIndex["curriculum"][datasetParts[0]]["subject"][datasetParts[1]]["groups"][datasetParts[2]];
+        downloadQuestions(questionuUrl, set);
+    }
     // Get questions
-    $.getJSON('https://raw.githubusercontent.com/LukePrior/australian-exam-database/main/exams/HSC/Economics/multiplechoice.json', function (data) {
-        questions = data;
-        generateQuestions(20);
-        nextQuestion();
-    });
+    function downloadQuestions(url, set) {
+        $.getJSON(url, function (data) {
+            questions = data;
+            //generateQuestions(20);
+            questionList = set["questions"];
+            nextQuestion();
+        });
+    }
     // List of questions
     function generateQuestions(num) {
         questionList = [];
@@ -50,6 +58,7 @@ $(function () {
         if (generateQuestions.arguments != 0) {
             questionList = questionList.slice(0, num);
         }
+        console.log(questionList);
     }
     // Next question
     function nextQuestion() {
