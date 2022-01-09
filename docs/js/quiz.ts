@@ -11,8 +11,6 @@ var questionList: string[] = [];
 var num: number;
 var questionIndex;
 
-const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-
 'use strict';
 
 $(function() {
@@ -99,6 +97,8 @@ $(function() {
 
   // Update question status
   function updateQuestionStatus(outcome: string) {
+
+    // Update completed object
     if (outcome == "correct") {
       completed[questionList[index - 1]] = {
         "status": "correct",
@@ -115,12 +115,18 @@ $(function() {
         "num": num
       };
     }
+
+    // Save to local DB
+    // TODO
+
     // Analytics event
     var gtagAction = "Question " + outcome;
     gtag('event', 'Question Answer', {
       'event_category': gtagAction,
       'event_label': questionList[index - 1]
     });
+
+    // Modal content
     var content: modalContent = {} as modalContent;
     content.title = completed[questionList[index - 1]].status;
     content.type = "status";
@@ -314,26 +320,8 @@ $(function() {
   // Modal close button
   $(".close").on('click', function( event ) { hideModal() });
 
-  // Theme changer
-  const currentTheme = localStorage.getItem("theme");
-  if (currentTheme == "dark") {
-    document.body.classList.toggle("dark-theme");
-  } else if (currentTheme == "light") {
-    document.body.classList.toggle("light-theme");
-  }
-
+  // Theme change button
   $('#themeButton').on('click', function( event ) {
-    if (prefersDarkScheme.matches) {
-      document.body.classList.toggle("light-theme");
-      var theme = document.body.classList.contains("light-theme")
-        ? "light"
-        : "dark";
-    } else {
-      document.body.classList.toggle("dark-theme");
-      var theme = document.body.classList.contains("dark-theme")
-        ? "dark"
-        : "light";
-    }
-    localStorage.setItem("theme", theme);
+    changeTheme();
   });
 });

@@ -1,5 +1,7 @@
 var questionsIndex;
 
+'use strict';
+
 // Get question index
 
 function getQuestionIndex () {
