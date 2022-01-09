@@ -42,7 +42,7 @@ $(function () {
         $.getJSON(url, function (data) {
             questions = data;
             //generateQuestions(20);
-            questionList = set["questions"];
+            questionList = filterQuestions(set["questions"]);
             nextQuestion();
         });
     }
@@ -58,6 +58,16 @@ $(function () {
             questionList = questionList.slice(0, num);
         }
         console.log(questionList);
+    }
+    // Filter questions
+    function filterQuestions(set) {
+        var newset = [];
+        for (var question in set) {
+            if (localStorage.getItem(question) != "correct") {
+                newset.push(question);
+            }
+        }
+        return newset;
     }
     // Next question
     function nextQuestion() {
