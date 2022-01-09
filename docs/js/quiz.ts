@@ -75,7 +75,7 @@ $(function() {
   // Filter questions
   function filterQuestions(set: []) {
     var newset = [];
-    for (const question in set) {
+    for (const question of set) {
       if (localStorage.getItem(question) != "correct") {
         newset.push(question);
       }

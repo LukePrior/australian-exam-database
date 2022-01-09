@@ -62,7 +62,8 @@ $(function () {
     // Filter questions
     function filterQuestions(set) {
         var newset = [];
-        for (var question in set) {
+        for (var _i = 0, set_1 = set; _i < set_1.length; _i++) {
+            var question = set_1[_i];
             if (localStorage.getItem(question) != "correct") {
                 newset.push(question);
             }
