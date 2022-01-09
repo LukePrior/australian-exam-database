@@ -81,26 +81,12 @@ $(function () {
     // Update question status
     function updateQuestionStatus(outcome) {
         // Update completed object
-        if (outcome == "correct") {
-            completed[questionList[index - 1]] = {
-                "status": "correct",
-                "num": num
-            };
-        }
-        else if (outcome == "incorrect") {
-            completed[questionList[index - 1]] = {
-                "status": "incorrect",
-                "num": num
-            };
-        }
-        else {
-            completed[questionList[index - 1]] = {
-                "status": "skipped",
-                "num": num
-            };
-        }
+        completed[questionList[index - 1]] = {
+            "status": outcome,
+            "num": num
+        };
         // Save to local DB
-        // TODO
+        localStorage.setItem(questionList[index - 1], outcome);
         // Analytics event
         var gtagAction = "Question " + outcome;
         gtag('event', 'Question Answer', {
